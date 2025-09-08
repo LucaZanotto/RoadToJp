@@ -9,6 +9,7 @@
   --panel:#ffffff;
   --panel-alt:#fafafa;
   --shadow: 0 8px 24px rgba(0,0,0,.06);
+  --radius:12px; /* aggiunta: usata dalla foto */
 }
 
 *{box-sizing:border-box}
@@ -133,7 +134,7 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
   display: grid;
   place-items: center;
   border-radius: 9999px;
-  background: rgba(20,20,20,0.65);
+  background: rgba(20,20,20,0.65); /* scuro = icone colorate/nere si vedono */
   backdrop-filter: blur(6px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
@@ -148,13 +149,15 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
   width: 22px;
   height: 22px;
   display: block;
-  filter: none; /* già bianche dal CDN */
+  filter: none;
 }
 
-/* Tema chiaro/scuro (opzionale) */
+/* Tema chiaro: se vuoi forzare maggiore contrasto, scommenta la riga sotto */
+/*
 @media (prefers-color-scheme: light){
-  .social-btn{ background: rgba(255,255,255,0.85); }
+  .social-btn img { filter: none; }
 }
+*/
 
 /* Evita che si stampino */
 @media print{
@@ -166,7 +169,7 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
   .social-dock{ bottom: 12px; right: 12px; }
 }
 
-/* Ramen photo in hero */
+/* ——— Ramen photo in hero ——— */
 .ramen-block {
   display: flex;
   align-items: center;
@@ -175,7 +178,9 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
 }
 
 .ramen-pic {
-  max-width: 360px; /* ridimensionata */
+  max-width: 360px;
+  width: 100%;
+  height: auto;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   flex-shrink: 0;
@@ -184,7 +189,25 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
 .ramen-caption {
   font-size: 0.95rem;
   color: var(--muted);
-  line-height: 1.3;
+  line-height: 1.35;
+  overflow-wrap: anywhere; /* impedisce overflow parole/lunghi emoji */
+}
+
+/* —— MOBILE: caption sotto l’immagine —— */
+@media (max-width: 640px){
+  .ramen-block {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ramen-pic {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+  }
+  .ramen-caption {
+    margin-top: 8px;
+    max-width: 100%;
+  }
 }
 
 .flag-icon {
@@ -193,5 +216,5 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
   vertical-align: middle;
   margin-left: 4px;
   box-shadow: 0 0 2px rgba(0,0,0,0.4);
-  border-radius: 4px; /* opzionale */
+  border-radius: 4px;
 }
