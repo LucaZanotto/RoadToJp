@@ -9,15 +9,17 @@ const CONFIG = {
     tiktok: "https://www.tiktok.com/@tuo-utente",
     twitter: "https://x.com/tuo-utente"
   },
-  // Themed micro-gifts
+  // Micro-gifts: fixed price + funny meme-style lines (sorted by price)
   gifts: [
-    { id:"fiori",  emoji:"💐", title:"Flowers",  desc:"A bouquet with a note.", suggest: 15 },
-    { id:"cinema", emoji:"🎬", title:"Cinema",   desc:"Two tickets for a movie night.", suggest: 8 },
-    { id:"cena",   emoji:"🍝", title:"Dinner",   desc:"A cozy dinner at our place.", suggest: 25 },
-    { id:"terme",  emoji:"♨️", title:"Spa",      desc:"Relaxing thermal spa entry.", suggest: 60 },
-    { id:"caffe",  emoji:"☕", title:"Coffee",   desc:"Offer me a coffee (or two!).", suggest: 1.5 }
+    { id:"coffee",  emoji:"☕", title:"Coffee",    desc:"Fuel my study brain — unlocks +5 focus.",                     amount: 2  },
+    { id:"cinema",  emoji:"🎬", title:"Cinema",    desc:"Two tickets so we can judge the plot like pros.",             amount: 8  },
+    { id:"flowers", emoji:"🌸", title:"Flowers",   desc:"Pixels are nice, but petals hit different.",                  amount: 15 },
+    { id:"dinner",  emoji:"🍝", title:"Dinner",    desc:"Home-cooked date night — chef’s kiss included.",              amount: 25 },
+    { id:"spa",     emoji:"♨️", title:"Spa Day",   desc:"De-stress upgrade: turning us from noodles to humans.",       amount: 80 },
+    { id:"weekend", emoji:"🧳", title:"Weekend",   desc:"Mini getaway: touching grass in 4K HDR.",                     amount: 200 }
   ]
 };
+
 
 // ====== Local state (demo) ======
 const STORAGE_KEY = "donationLiteV1";
@@ -55,15 +57,12 @@ function toggleMenu(){
   primaryMenu.classList.toggle("open", !isOpen);
 }
 hamburger?.addEventListener("click", (e)=>{ e.stopPropagation(); toggleMenu(); });
-// Chiudi il menu quando clicchi un link o fuori
 primaryMenu?.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 document.addEventListener("click",(e)=>{
-  if (!primaryMenu?.contains(e.target) && !hamburger?.contains(e.target)) {
-    closeMenu();
-  }
+  if (!primaryMenu?.contains(e.target) && !hamburger?.contains(e.target)) closeMenu();
 });
 
-// ====== Rendering ======
+// ====== State helpers ======
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function addDonation(giftId, amount){
   amount = Math.round(Math.max(0, Number(amount) || 0));
@@ -74,6 +73,7 @@ function addDonation(giftId, amount){
 }
 function resetState(){ localStorage.removeItem(STORAGE_KEY); location.reload(); }
 
+// ====== Render ======
 function render(){
   // Total
   const totalRaised = state.totalRaised || 0;
@@ -82,48 +82,35 @@ function render(){
   $("totalTargetLabel").textContent = `Target: ${formatEUR(CONFIG.totalTarget)}`;
   $("totalProgress").style.width = pct + "%";
 
-  // Gifts grid
+  // Gifts grid (semplice)
   const grid = $("giftGrid");
   grid.innerHTML = "";
   const tpl = $("giftCardTpl");
-  const freeSel = $("freeGift");
-  freeSel.innerHTML = '<option value="">— optionally link it to a gesture —</option>';
 
   CONFIG.gifts.forEach(g => {
     const node = tpl.content.cloneNode(true);
     node.querySelector(".gift-emoji").textContent = g.emoji;
     node.querySelector(".gift-title").textContent = g.title;
     node.querySelector(".gift-desc").textContent = g.desc;
-    node.querySelector(".suggest-amount").textContent = formatEUR(g.suggest);
-
-    let selectedAmount = g.suggest;
-    node.querySelectorAll(".chip").forEach(chip=>{
-      const val = parseInt(chip.dataset.amount,10);
-      if(val === selectedAmount) chip.classList.add("active");
-      chip.addEventListener("click", ()=>{
-        node.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
-        if(val > 0){ chip.classList.add("active"); selectedAmount = val; }
-        else{
-          const other = prompt("Enter a custom amount (€):", String(selectedAmount));
-          const num = parseInt(other,10);
-          if(!isNaN(num) && num>0) { selectedAmount = num; }
-        }
-      });
-    });
-
-    const raised = state.gifts[g.id] || 0;
-    node.querySelector("[data-role='giftRaised']").textContent = formatEUR(raised);
+    node.querySelector(".amount").textContent = formatEUR(g.amount);
 
     node.querySelector("[data-role='donateBtn']").addEventListener("click", ()=>{
-      openPaymentModal(g.title, selectedAmount, g.id);
+      openPaymentModal(g.title, g.amount, g.id);
     });
 
     grid.appendChild(node);
-
-    const opt = document.createElement("option");
-    opt.value = g.id; opt.textContent = `${g.emoji} ${g.title}`;
-    freeSel.appendChild(opt);
   });
+
+  // Popola la tendina del custom (opzionale)
+  const freeSel = $("freeGift");
+  if (freeSel) {
+    freeSel.innerHTML = '<option value="">— optionally link it to a gesture —</option>';
+    CONFIG.gifts.forEach(g => {
+      const opt = document.createElement("option");
+      opt.value = g.id; opt.textContent = `${g.emoji} ${g.title}`;
+      freeSel.appendChild(opt);
+    });
+  }
 }
 
 // Payments
@@ -158,17 +145,6 @@ $("freeDonateBtn").addEventListener("click", ()=>{
   openPaymentModal(title, amount, giftId);
 });
 
-// Share (kept for future use if you re-add share buttons)
-function share({title, text}){
-  const url = location.href;
-  if(navigator.share){
-    navigator.share({title, text, url}).catch(()=>{});
-  }else{
-    navigator.clipboard.writeText(url);
-    alert("Link copied to clipboard. Thanks for sharing!");
-  }
-}
-
 // Init
-$("resetData").addEventListener("click", resetState);
+document.getElementById("resetData")?.addEventListener("click", resetState);
 render();

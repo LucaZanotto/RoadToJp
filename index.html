@@ -102,39 +102,27 @@
         </div>
     </section>
 
-    <!-- Themed gifts -->
+    <!-- Themed gifts (semplificati) -->
     <section id="gifts" class="section">
       <div class="container">
         <h2>Themed micro-gifts</h2>
-        <p class="muted">Pick a gesture: the amount is suggested, but you can adjust it.</p>
+        <p class="muted">Pick a gesture and tap “Contribute”. Simple and sweet ♥</p>
 
         <div id="giftGrid" class="grid"></div>
 
+        <!-- Template semplificato: solo titolo, descrizione, prezzo e bottone -->
         <template id="giftCardTpl">
-          <article class="card gift">
+          <article class="card gift simple-gift">
             <div class="gift-row">
-              <div class="gift-emoji" aria-hidden="true">🌸</div>
+              <div class="gift-emoji" aria-hidden="true">☕</div>
               <div class="gift-info">
-                <h3 class="gift-title">Title</h3>
-                <p class="gift-desc">Description</p>
+                <h3 class="gift-title">Gift title</h3>
+                <p class="gift-desc">Cute description line…</p>
               </div>
-              <div class="gift-suggest">
-                <span class="suggest-label">Suggested</span>
-                <div class="suggest-amount">€10</div>
+              <div class="gift-price">
+                <div class="amount">€0</div>
+                <button class="btn btn-small" data-role="donateBtn">Contribute</button>
               </div>
-            </div>
-
-            <div class="gift-actions">
-              <div class="amount-row">
-                <button class="chip" data-amount="1">€1</button>
-                <button class="chip" data-amount="5">€5</button>
-                <button class="chip" data-amount="15">€15</button>
-                <button class="chip" data-amount="0" data-role="custom">Other</button>
-              </div>
-              <div class="btn-row">
-                <button class="btn" data-role="donateBtn">Contribute</button>
-              </div>
-              <div class="tiny muted">Raised: <span data-role="giftRaised">€0</span></div>
             </div>
           </article>
         </template>
