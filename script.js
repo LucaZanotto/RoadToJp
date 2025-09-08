@@ -9,7 +9,7 @@ const CONFIG = {
     tiktok: "https://www.tiktok.com/@tuo-utente",
     twitter: "https://x.com/tuo-utente"
   },
-  // Micro-gifts: fixed price + meme-style lines (sorted by price)
+  // Gifts: fixed price + meme-style lines (sorted by price)
   gifts: [
     { id:"coffee",  emoji:"☕", title:"Coffee",   desc:"Fuel my study brain — unlocks +5 focus.",                     amount: 2  },
     { id:"cinema",  emoji:"🎬", title:"Cinema",   desc:"Two tickets so we can judge the plot like pros.",             amount: 8  },
@@ -20,19 +20,41 @@ const CONFIG = {
   ]
 };
 
-// ====== Local state (demo) ======
-const STORAGE_KEY = "donationLiteV1";
-const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-if (!state.gifts) { state.gifts = {}; }
-if (typeof state.totalRaised !== "number") { state.totalRaised = 0; }
-
-// Utils
-const formatEUR = (n) =>
-  new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
-const clamp = (x,min,max)=>Math.min(Math.max(x,min),max);
+// ====== Utilities ======
 const $ = (id) => document.getElementById(id);
+function formatEUR(n){
+  return new Intl.NumberFormat("en-GB", {style:"currency", currency:"EUR", maximumFractionDigits:0}).format(n);
+}
+const clamp = (x,min,max)=>Math.min(Math.max(x,min),max);
 
-// Social dock: set hrefs from CONFIG
+// ====== Supabase: lettura del totale reale (RPC) ======
+// Inserisci i tuoi valori in seguito: per ora sono placeholder sicuri.
+const SUPABASE_URL  = "https://owoeqjeqqbtrtiwgpqbr.supabase.co";  // OK renderlo pubblico
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93b2VxamVxcWJ0cnRpd2dwcWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczNDQ0ODYsImV4cCI6MjA3MjkyMDQ4Nn0.Nj_yol5ECxQ70-j5GsztNkYBz9tN_8PZDSkpY_FLp6I";                         // Sostituisci quando pronto
+
+async function fetchTotalCents(){
+  // Se la chiave è ancora placeholder, evita la chiamata remota
+  if (!SUPABASE_ANON || SUPABASE_ANON.startsWith("<")) {
+    console.warn("Supabase anon key non impostata: il totale resterà 0 finché non la configuri.");
+    return 0;
+  }
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_donation_total`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_ANON,
+      Authorization: `Bearer ${SUPABASE_ANON}`
+    }
+  });
+  if (!r.ok) {
+    console.error("Errore nel recupero totale:", await r.text());
+    return 0;
+  }
+  const cents = await r.json(); // ritorna bigint/number
+  return Number(cents) || 0;
+}
+
+// ====== Social dock: set hrefs from CONFIG ======
 $("socialIG")?.setAttribute("href", CONFIG.social.instagram);
 $("socialTT")?.setAttribute("href", CONFIG.social.tiktok);
 $("socialTW")?.setAttribute("href", CONFIG.social.twitter);
@@ -58,27 +80,20 @@ document.addEventListener("click",(e)=>{
   if (!primaryMenu?.contains(e.target) && !hamburger?.contains(e.target)) closeMenu();
 });
 
-// ====== State helpers ======
-function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function addDonation(giftId, amount){
-  amount = Math.round(Math.max(0, Number(amount) || 0));
-  if(!amount) return;
-  state.totalRaised += amount;
-  if(giftId){ state.gifts[giftId] = (state.gifts[giftId]||0) + amount; }
-  saveState(); render();
-}
-function resetState(){ localStorage.removeItem(STORAGE_KEY); location.reload(); }
+// ====== Render Totale (reale) ======
+async function renderTotal(){
+  const totalCents = await fetchTotalCents();
+  const totalRaised = Math.round(totalCents / 100); // converti in EUR interi
+  const target = CONFIG.totalTarget;
+  const pct = clamp((totalRaised / target) * 100, 0, 100);
 
-// ====== Render ======
-function render(){
-  // Total
-  const totalRaised = state.totalRaised || 0;
-  const pct = clamp((totalRaised / CONFIG.totalTarget) * 100, 0, 100);
   $("totalRaisedLabel").textContent = `${formatEUR(totalRaised)} raised`;
-  $("totalTargetLabel").textContent = `Target: ${formatEUR(CONFIG.totalTarget)}`;
+  $("totalTargetLabel").textContent = `Target: ${formatEUR(target)}`;
   $("totalProgress").style.width = pct + "%";
+}
 
-  // Gifts grid
+// ====== Render Gift Grid ======
+function renderGifts(){
   const grid = $("giftGrid");
   grid.innerHTML = "";
   const tpl = $("giftCardTpl");
@@ -123,14 +138,17 @@ function openPaymentModal(title, amount, giftId){
   paypalA.href = CONFIG.paypalLink;
   satisA.href  = CONFIG.satispayLink;
 
-  // Click: if there's an amount, update the counter; otherwise just open/copy
-  paypalA.onclick = () => { if (hasAmount) addDonation(giftId, amount); };
-  satisA.onclick  = () => { if (hasAmount) addDonation(giftId, amount); };
-  $("copyIban").onclick = () => {
-    navigator.clipboard.writeText(CONFIG.iban);
-    if (hasAmount) addDonation(giftId, amount);
-    alert("IBAN copied to clipboard. Thank you!");
-  };
+  // Importante: NON incrementiamo più un contatore locale qui.
+  // Il totale viene solo da Supabase.
+  paypalA.onclick = null;
+  satisA.onclick  = null;
+  const copyBtn = $("copyIban");
+  if (copyBtn) {
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(CONFIG.iban);
+      alert("IBAN copied to clipboard. Thank you!");
+    };
+  }
 
   modal?.showModal?.();
 }
@@ -145,6 +163,14 @@ $("openCustomMenu")?.addEventListener("click", (e)=>{
   openPaymentModal("Custom amount", null, null);
 });
 
-// Init
-$("resetData")?.addEventListener("click", resetState);
-render();
+// ====== Init ======
+(function init(){
+  // Nascondi eventuale bottone "Reset local data" se presente nell'HTML (non serve più)
+  const resetBtn = $("resetData");
+  if (resetBtn) resetBtn.style.display = "none";
+
+  renderGifts();
+  renderTotal();
+  // Refresh periodico opzionale (30s)
+  setInterval(renderTotal, 30000);
+})();

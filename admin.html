@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin – Add donation</title>
+<style>
+  :root{--b:#111;--m:#6b7280;--bd:#e5e7eb}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 16px;line-height:1.5}
+  h1{margin:0 0 16px}
+  .card{border:1px solid var(--bd);border-radius:12px;padding:16px}
+  label{display:block;margin-top:12px;font-weight:700}
+  input,select,button,textarea{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;font:inherit}
+  button{background:#111;color:#fff;font-weight:800;cursor:pointer}
+  button:disabled{opacity:.6;cursor:not-allowed}
+  small{color:var(--m)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .mt{margin-top:14px}
+  pre{white-space:pre-wrap;word-break:break-word;background:#f7f7f7;border:1px solid var(--bd);border-radius:10px;padding:12px}
+</style>
+
+<h1>Admin – Add donation</h1>
+<p class="card">
+  Inserisci manualmente le donazioni (IBAN / Satispay / manual).<br>
+  <small>Questo form invia una richiesta POST a <code>/api/add-donation</code>. È necessario il tuo <b>ADMIN_TOKEN</b>.</small>
+</p>
+
+<div class="card">
+  <label>Admin token
+    <input id="tok" type="password" placeholder="***" autocomplete="current-password">
+  </label>
+
+  <div class="row">
+    <div>
+      <label>Amount (€)
+        <input id="amt" type="number" step="1" min="1" placeholder="50">
+      </label>
+    </div>
+    <div>
+      <label>Source
+        <select id="src">
+          <option value="manual">manual</option>
+          <option value="iban">iban</option>
+          <option value="satispay">satispay</option>
+          <option value="paypal">paypal</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <label class="mt">External ID (facoltativo – es. CRO/Txn ID)
+    <input id="ext" placeholder="ABC123...">
+  </label>
+
+  <label class="mt">Note (facoltativa)
+    <input id="note" placeholder="Donazione da zio Pino">
+  </label>
+
+  <div class="row mt">
+    <div>
+      <label>Status</label>
+      <select id="status">
+        <option value="settled" selected>settled</option>
+        <option value="pending">pending</option>
+        <option value="refunded">refunded</option>
+      </select>
+    </div>
+    <div>
+      <label>Currency</label>
+      <select id="cur">
+        <option value="EUR" selected>EUR</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="send" class="mt">Save donation</button>
+  <pre id="out" class="mt"></pre>
+</div>
+
+<script>
+  const out = document.getElementById('out');
+  const btn = document.getElementById('send');
+
+  btn.onclick = async () => {
+    out.textContent = "Saving...";
+    btn.disabled = true;
+    try {
+      const token = document.getElementById('tok').value.trim();
+      const amount = Number(document.getElementById('amt').value);
+      const source = document.getElementById('src').value;
+      const note = document.getElementById('note').value;
+      const external_id = document.getElementById('ext').value || null;
+      const status = document.getElementById('status').value;
+      const currency = document.getElementById('cur').value;
+
+      const r = await fetch('/api/add-donation', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + token
+        },
+        body: JSON.stringify({ amount_eur: amount, source, note, external_id, status, currency })
+      });
+      const text = await r.text();
+      out.textContent = text;
+    } catch (e) {
+      out.textContent = "Error: " + e.message;
+    } finally {
+      btn.disabled = false;
+    }
+  };
+</script>
+</html>
