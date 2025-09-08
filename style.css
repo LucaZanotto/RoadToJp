@@ -54,11 +54,21 @@ body{
 .hamburger{
   display:none;
   width:44px; height:44px; border-radius:12px; border:1px solid var(--border);
-  background:#fff; cursor:pointer; align-items:center; justify-content:center; gap:4px;
+  background:#fff; cursor:pointer;
+  flex-direction: column;        /* <-- aggiunto */
+  align-items:center; 
+  justify-content:center;
+  gap:5px;                       /* spaziatura verticale */
 }
 .hamburger span{
-  display:block; width:20px; height:2px; background:#111; border-radius:2px;
+  display:block;
+  width:22px;
+  height:2px;
+  background:#111;
+  border-radius:2px;
+  transition: transform .3s ease, opacity .3s ease;
 }
+
 .hamburger[aria-expanded="true"] span:nth-child(2){opacity:.1}
 .hamburger[aria-expanded="true"] span:nth-child(1){transform: translateY(6px) rotate(45deg)}
 .hamburger[aria-expanded="true"] span:nth-child(3){transform: translateY(-6px) rotate(-45deg)}
