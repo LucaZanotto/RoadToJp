@@ -179,8 +179,6 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
 
 .ramen-pic {
   max-width: 360px;
-  width: 100%;
-  height: auto;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   flex-shrink: 0;
@@ -189,19 +187,18 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
 .ramen-caption {
   font-size: 0.95rem;
   color: var(--muted);
-  line-height: 1.35;
-  overflow-wrap: anywhere; /* impedisce overflow parole/lunghi emoji */
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
-/* —— MOBILE: caption sotto l’immagine —— */
-@media (max-width: 640px){
+/* MOBILE: caption sotto la foto */
+@media (max-width: 768px){
   .ramen-block {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column;     /* caption sotto */
+    align-items: flex-start;    /* allinea a sinistra */
   }
   .ramen-pic {
-    max-width: 100%;
-    width: 100%;
+    max-width: 100%;            /* immagine responsiva */
     height: auto;
   }
   .ramen-caption {
@@ -209,6 +206,8 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
     max-width: 100%;
   }
 }
+
+
 
 .flag-icon {
   width: 22px;
