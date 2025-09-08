@@ -134,24 +134,84 @@ function openPaymentModal(title, amount, giftId){
   // Payment links
   const paypalA = $("payPaypal");
   const satisA  = $("paySatispay");
-  $("ibanValue").textContent = CONFIG.iban;
   paypalA.href = CONFIG.paypalLink;
   satisA.href  = CONFIG.satispayLink;
+
+  // ---- IBAN: show/hide/copy flow ----
+  const ibanCode = $("ibanValue");
+  const copyBtn  = $("copyIban");
+
+  if (ibanCode) {
+    // scrivi l'IBAN dal config e nascondilo inizialmente
+    ibanCode.textContent = CONFIG.iban;
+    ibanCode.style.display = "none";
+
+    // assicura che il bottone "Copy IBAN" esista ma sia nascosto finché non mostri l'IBAN
+    if (copyBtn) {
+      copyBtn.style.display = "none";
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(CONFIG.iban);
+        alert("IBAN copied to clipboard. Thank you!");
+      };
+    }
+
+    // crea (o riusa) i bottoni "Show IBAN" e "Hide IBAN"
+    let showBtn = document.getElementById("showIban");
+    let hideBtn = document.getElementById("hideIban");
+
+    if (!showBtn) {
+      showBtn = document.createElement("button");
+      showBtn.id = "showIban";
+      showBtn.type = "button";
+      showBtn.className = "btn btn-small";
+      showBtn.textContent = "Show IBAN";
+      ibanCode.parentNode.insertBefore(showBtn, ibanCode);
+    }
+    if (!hideBtn) {
+      hideBtn = document.createElement("button");
+      hideBtn.id = "hideIban";
+      hideBtn.type = "button";
+      hideBtn.className = "btn btn-small";
+      hideBtn.textContent = "Hide IBAN";
+      ibanCode.parentNode.insertBefore(hideBtn, ibanCode);
+    }
+
+    // stato iniziale ad ogni apertura modale
+    showBtn.style.display = "inline-block";
+    hideBtn.style.display = "none";
+    ibanCode.style.display = "none";
+    if (copyBtn) copyBtn.style.display = "none";
+
+    // handler reveal
+    showBtn.onclick = () => {
+      ibanCode.style.display = "inline";
+      if (copyBtn) copyBtn.style.display = "inline-block";
+      hideBtn.style.display = "inline-block";
+      showBtn.style.display = "none";
+    };
+    // handler hide
+    hideBtn.onclick = () => {
+      ibanCode.style.display = "none";
+      if (copyBtn) copyBtn.style.display = "none";
+      showBtn.style.display = "inline-block";
+      hideBtn.style.display = "none";
+    };
+  }
+
+  // ---- messaggio finale aggiornato (inglese, gentile) ----
+  const finalNote = document.querySelector("#payModal .tiny.muted");
+  if (finalNote) {
+    finalNote.textContent = "The counter updates automatically as soon as your payment is confirmed. Thanks so much! 💖";
+  }
 
   // Importante: NON incrementiamo più un contatore locale qui.
   // Il totale viene solo da Supabase.
   paypalA.onclick = null;
   satisA.onclick  = null;
-  const copyBtn = $("copyIban");
-  if (copyBtn) {
-    copyBtn.onclick = () => {
-      navigator.clipboard.writeText(CONFIG.iban);
-      alert("IBAN copied to clipboard. Thank you!");
-    };
-  }
 
   modal?.showModal?.();
 }
+
 
 // ====== Custom amount triggers (same modal, no fixed amount) ======
 $("openCustomCta")?.addEventListener("click", ()=>{

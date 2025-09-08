@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RoadToJapan2026</title>
   <link rel="icon" href="flags/jp.svg" type="image/svg+xml">
-  <meta name="description" content="Goal: a trip to Japan (€5,000). You can contribute with themed gifts or a custom amount. Thank you!">
+  <meta name="description" content="Help us reach the Japan trip goal (€5,000). Choose a themed gift or set a custom amount. The counter updates in real time. Thank you!">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -83,7 +83,6 @@
             <div class="progress"><div id="totalProgress" class="progress-bar" style="width:0%"></div></div>
             <div class="goal-bot">
               <span id="totalTargetLabel">Target: €5,000</span>
-              <button class="reset" id="resetData" type="button" title="Local only, for testing">Reset local data</button>
             </div>
           </div>
           <div class="cta-row">
@@ -137,7 +136,7 @@
         </details>
         <details>
           <summary>Is the counter real?</summary>
-          <p>The counter shown here is a <em>local demo</em>. The real total depends on actual payment movements.</p>
+          <p>Yes. The total updates from my database as soon as donations are recorded.</p>
         </details>
       </div>
     </section>
@@ -164,9 +163,12 @@
             <div class="pay-emoji" aria-hidden="true">🏦</div>
             <div class="pay-copy">
               <div class="pay-title">IBAN</div>
-              <div class="pay-sub"><code id="ibanValue">IT00 A000 0000 0000 0000 0000 000</code></div>
+              <div class="pay-sub">
+                <button class="btn btn-small" id="showIban" type="button">Show IBAN</button>
+                <code id="ibanValue" style="display:none">IT00 A000 0000 0000 0000 0000 000</code>
+              </div>
             </div>
-            <button class="btn btn-small" id="copyIban" type="button">Copy IBAN</button>
+            <button class="btn btn-small" id="copyIban" type="button" style="display:none">Copy IBAN</button>
           </div>
           <a id="paySatispay" class="pay-card" target="_blank" rel="noopener">
             <div class="pay-emoji" aria-hidden="true">📱</div>
@@ -176,7 +178,7 @@
             </div>
           </a>
         </div>
-        <p class="tiny muted">After paying, please ping me so I can update the real counter. Thank you! 💖</p>
+        <p class="tiny muted">The counter updates automatically as soon as your payment is confirmed. Thanks so much! 💖</p>
       </div>
     </form>
   </dialog>
