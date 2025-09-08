@@ -41,8 +41,7 @@
       <nav class="menu" id="primaryMenu" aria-label="Primary">
         <a href="#goal">Goal</a>
         <a href="#gifts">Themed gifts</a>
-        <a href="#custom">Custom amount</a>
-        <a href="#faq">FAQ</a>
+        <a href="#" id="openCustomMenu">Custom amount</a>
 
         <!-- Language switcher -->
         <div class="lang-switch" aria-label="Language selector">
@@ -89,7 +88,7 @@
           </div>
           <div class="cta-row">
             <a class="btn" href="#gifts">Choose a gift</a>
-            <a class="btn ghost" href="#custom">Custom amount</a>
+            <button class="btn ghost" id="openCustomCta" type="button">Custom amount</button>
           </div>
         </div>
 
@@ -102,7 +101,7 @@
         </div>
     </section>
 
-    <!-- Themed gifts (semplificati) -->
+    <!-- Themed gifts (simplified) -->
     <section id="gifts" class="section">
       <div class="container">
         <h2>Themed micro-gifts</h2>
@@ -110,7 +109,6 @@
 
         <div id="giftGrid" class="grid"></div>
 
-        <!-- Template semplificato: solo titolo, descrizione, prezzo e bottone -->
         <template id="giftCardTpl">
           <article class="card gift simple-gift">
             <div class="gift-row">
@@ -126,24 +124,6 @@
             </div>
           </article>
         </template>
-      </div>
-    </section>
-
-    <!-- Custom amount -->
-    <section id="custom" class="section alt">
-      <div class="container">
-        <h2>Custom amount</h2>
-        <form id="freeForm" class="free-form" onsubmit="return false;">
-          <label for="freeAmount">Choose your amount</label>
-          <div class="free-row">
-            <input id="freeAmount" type="number" min="1" step="1" placeholder="e.g., 12" required />
-            <select id="freeGift">
-              <option value="">— optionally link it to a gesture —</option>
-            </select>
-            <button class="btn" id="freeDonateBtn" type="button">Contribute</button>
-          </div>
-          <p class="tiny muted">You can pay via PayPal, bank transfer (IBAN), or Satispay/Other.</p>
-        </form>
       </div>
     </section>
 
@@ -171,7 +151,7 @@
         <button class="icon-btn" value="close" aria-label="Close">✖</button>
       </header>
       <div class="modal-body">
-        <p>Selected amount: <strong id="modalAmount">€0</strong></p>
+        <p id="selectedRow">Selected amount: <strong id="modalAmount">€0</strong></p>
         <div class="pay-grid">
           <a id="payPaypal" class="pay-card" target="_blank" rel="noopener">
             <div class="pay-emoji" aria-hidden="true">💳</div>

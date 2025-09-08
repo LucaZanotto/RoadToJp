@@ -9,17 +9,16 @@ const CONFIG = {
     tiktok: "https://www.tiktok.com/@tuo-utente",
     twitter: "https://x.com/tuo-utente"
   },
-  // Micro-gifts: fixed price + funny meme-style lines (sorted by price)
+  // Micro-gifts: fixed price + meme-style lines (sorted by price)
   gifts: [
-    { id:"coffee",  emoji:"☕", title:"Coffee",    desc:"Fuel my study brain — unlocks +5 focus.",                     amount: 2  },
-    { id:"cinema",  emoji:"🎬", title:"Cinema",    desc:"Two tickets so we can judge the plot like pros.",             amount: 8  },
-    { id:"flowers", emoji:"🌸", title:"Flowers",   desc:"Pixels are nice, but petals hit different.",                  amount: 15 },
-    { id:"dinner",  emoji:"🍝", title:"Dinner",    desc:"Home-cooked date night — chef’s kiss included.",              amount: 25 },
-    { id:"spa",     emoji:"♨️", title:"Spa Day",   desc:"De-stress upgrade: turning us from noodles to humans.",       amount: 80 },
-    { id:"weekend", emoji:"🧳", title:"Weekend",   desc:"Mini getaway: touching grass in 4K HDR.",                     amount: 200 }
+    { id:"coffee",  emoji:"☕", title:"Coffee",   desc:"Fuel my study brain — unlocks +5 focus.",                     amount: 2  },
+    { id:"cinema",  emoji:"🎬", title:"Cinema",   desc:"Two tickets so we can judge the plot like pros.",             amount: 8  },
+    { id:"flowers", emoji:"🌸", title:"Flowers",  desc:"Pixels are nice, but petals hit different.",                  amount: 15 },
+    { id:"dinner",  emoji:"🍝", title:"Dinner",   desc:"Home-cooked date night — chef’s kiss included.",              amount: 25 },
+    { id:"spa",     emoji:"♨️", title:"Spa Day",  desc:"De-stress upgrade: turning us from noodles to humans.",       amount: 80 },
+    { id:"weekend", emoji:"🧳", title:"Weekend",  desc:"Mini getaway: touching grass in 4K HDR.",                     amount: 200 }
   ]
 };
-
 
 // ====== Local state (demo) ======
 const STORAGE_KEY = "donationLiteV1";
@@ -34,12 +33,9 @@ const clamp = (x,min,max)=>Math.min(Math.max(x,min),max);
 const $ = (id) => document.getElementById(id);
 
 // Social dock: set hrefs from CONFIG
-const ig = $("socialIG");
-const tk = $("socialTT");
-const tw = $("socialTW");
-if (ig) ig.href = CONFIG.social.instagram;
-if (tk) tk.href = CONFIG.social.tiktok;
-if (tw) tw.href = CONFIG.social.twitter;
+$("socialIG")?.setAttribute("href", CONFIG.social.instagram);
+$("socialTT")?.setAttribute("href", CONFIG.social.tiktok);
+$("socialTW")?.setAttribute("href", CONFIG.social.twitter);
 
 // ====== Mobile menu (hamburger) ======
 const hamburger = $("hamburger");
@@ -82,7 +78,7 @@ function render(){
   $("totalTargetLabel").textContent = `Target: ${formatEUR(CONFIG.totalTarget)}`;
   $("totalProgress").style.width = pct + "%";
 
-  // Gifts grid (semplice)
+  // Gifts grid
   const grid = $("giftGrid");
   grid.innerHTML = "";
   const tpl = $("giftCardTpl");
@@ -100,51 +96,55 @@ function render(){
 
     grid.appendChild(node);
   });
-
-  // Popola la tendina del custom (opzionale)
-  const freeSel = $("freeGift");
-  if (freeSel) {
-    freeSel.innerHTML = '<option value="">— optionally link it to a gesture —</option>';
-    CONFIG.gifts.forEach(g => {
-      const opt = document.createElement("option");
-      opt.value = g.id; opt.textContent = `${g.emoji} ${g.title}`;
-      freeSel.appendChild(opt);
-    });
-  }
 }
 
-// Payments
+// ====== Payments / Modal ======
 const modal = document.getElementById("payModal");
+
 function openPaymentModal(title, amount, giftId){
+  const hasAmount = Number.isFinite(amount) && amount > 0;
+
+  // Titolo
   $("modalTitle").textContent = "Contribute — " + title;
-  $("modalAmount").textContent = formatEUR(amount);
 
+  // Riga "Selected amount": mostra solo se abbiamo un importo
+  const selectedRow = document.getElementById("selectedRow");
+  if (selectedRow){
+    selectedRow.style.display = hasAmount ? "" : "none";
+  }
+  if (hasAmount){
+    $("modalAmount").textContent = formatEUR(amount);
+  }
+
+  // Link di pagamento
   const paypalA = $("payPaypal");
-  paypalA.href = CONFIG.paypalLink;
-  const satisA = $("paySatispay");
-  satisA.href = CONFIG.satispayLink;
+  const satisA  = $("paySatispay");
   $("ibanValue").textContent = CONFIG.iban;
+  paypalA.href = CONFIG.paypalLink;
+  satisA.href  = CONFIG.satispayLink;
 
-  paypalA.onclick = () => { addDonation(giftId, amount); };
-  satisA.onclick = () => { addDonation(giftId, amount); };
+  // Click: se c'è un importo, aggiorna il contatore; altrimenti solo apri il link/copia
+  paypalA.onclick = () => { if (hasAmount) addDonation(giftId, amount); };
+  satisA.onclick  = () => { if (hasAmount) addDonation(giftId, amount); };
   $("copyIban").onclick = () => {
     navigator.clipboard.writeText(CONFIG.iban);
-    addDonation(giftId, amount);
+    if (hasAmount) addDonation(giftId, amount);
     alert("IBAN copied to clipboard. Thank you!");
   };
 
   modal?.showModal?.();
 }
 
-// Custom amount
-$("freeDonateBtn").addEventListener("click", ()=>{
-  const amount = parseInt($("freeAmount").value, 10);
-  const giftId = $("freeGift").value || null;
-  if(isNaN(amount) || amount<=0){ alert("Please enter a valid amount."); return; }
-  const title = giftId ? (CONFIG.gifts.find(g=>g.id===giftId)?.title || "Custom amount") : "Custom amount";
-  openPaymentModal(title, amount, giftId);
+// ====== Custom amount triggers (stesso modal, senza importo) ======
+$("openCustomCta")?.addEventListener("click", ()=>{
+  openPaymentModal("Custom amount", null, null);
+});
+$("openCustomMenu")?.addEventListener("click", (e)=>{
+  e.preventDefault();
+  closeMenu();
+  openPaymentModal("Custom amount", null, null);
 });
 
 // Init
-document.getElementById("resetData")?.addEventListener("click", resetState);
+$("resetData")?.addEventListener("click", resetState);
 render();
