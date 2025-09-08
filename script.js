@@ -85,15 +85,6 @@ function render(){
   $("totalTargetLabel").textContent = `Target: ${formatEUR(CONFIG.totalTarget)}`;
   $("totalProgress").style.width = pct + "%";
 
-  // Contacts
-  const emailA = $("contactEmail");
-  emailA.textContent = CONFIG.contacts.email;
-  emailA.href = "mailto:" + CONFIG.contacts.email;
-  const phoneA = $("contactPhone");
-  phoneA.textContent = CONFIG.contacts.phone;
-  phoneA.href = "tel:" + CONFIG.contacts.phone.replace(/\s+/g,'');
-  const ppA = $("contactPaypal");
-  ppA.href = CONFIG.contacts.paypal;
 
   // Gifts grid
   const grid = $("giftGrid");
