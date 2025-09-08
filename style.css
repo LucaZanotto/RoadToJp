@@ -70,7 +70,7 @@ body{
   background:#111;
   border-radius:2px;
   transform: translateX(-50%);
-  transition: transform .25s ease, opacity .2s ease, background .2s ease, top .25s ease;
+  transition: transform .25s ease, top .25s ease, opacity .2s ease, background .2s ease;
 }
 
 /* 3 linee allineate perfettamente */

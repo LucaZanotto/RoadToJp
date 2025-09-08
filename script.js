@@ -4,11 +4,6 @@ const CONFIG = {
   paypalLink: "https://www.paypal.me/lucazan8",
   satispayLink: "https://satispay.com/pay/tuo-utente",
   iban: "IT00 A000 0000 0000 0000 0000 000",
-  contacts: {
-    email: "roadtojapan2k26@gmail.com",
-    phone: "+39 3XX XXX XXXX",
-    paypal: "https://www.paypal.me/lucazan8"
-  },
   social: {
     instagram: "https://www.instagram.com/roadtojapan2k26/",
     tiktok: "https://www.tiktok.com/@tuo-utente",
@@ -49,19 +44,21 @@ const hamburger = $("hamburger");
 const primaryMenu = $("primaryMenu");
 
 function closeMenu(){
+  if (!hamburger || !primaryMenu) return;
   hamburger.setAttribute("aria-expanded","false");
   primaryMenu.classList.remove("open");
 }
 function toggleMenu(){
+  if (!hamburger || !primaryMenu) return;
   const isOpen = hamburger.getAttribute("aria-expanded")==="true";
   hamburger.setAttribute("aria-expanded", String(!isOpen));
-  primaryMenu.classList.toggle("open");
+  primaryMenu.classList.toggle("open", !isOpen);
 }
-hamburger?.addEventListener("click", toggleMenu);
+hamburger?.addEventListener("click", (e)=>{ e.stopPropagation(); toggleMenu(); });
 // Chiudi il menu quando clicchi un link o fuori
 primaryMenu?.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 document.addEventListener("click",(e)=>{
-  if (!primaryMenu.contains(e.target) && !hamburger.contains(e.target)) {
+  if (!primaryMenu?.contains(e.target) && !hamburger?.contains(e.target)) {
     closeMenu();
   }
 });
@@ -84,7 +81,6 @@ function render(){
   $("totalRaisedLabel").textContent = `${formatEUR(totalRaised)} raised`;
   $("totalTargetLabel").textContent = `Target: ${formatEUR(CONFIG.totalTarget)}`;
   $("totalProgress").style.width = pct + "%";
-
 
   // Gifts grid
   const grid = $("giftGrid");
