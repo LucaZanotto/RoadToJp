@@ -1,0 +1,197 @@
+/* ===== Stile chiaro leggero ===== */
+:root{
+  --bg:#ffffff;
+  --text:#111827;
+  --muted:#6b7280;
+  --brand:#e11d48; /* rosso lampone */
+  --brand-2:#f43f5e;
+  --border:#e5e7eb;
+  --panel:#ffffff;
+  --panel-alt:#fafafa;
+  --shadow: 0 8px 24px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height:1.55;
+}
+
+/* Container */
+.container{width:min(1100px, 92%); margin-inline:auto}
+
+/* Header / menu simile all'originale: chiaro, sottile, bordo inferiore, link con underline al passaggio */
+.site-header{
+  position: sticky; top:0; z-index:50;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
+.brand{font-weight:800; text-decoration:none; color:var(--text)}
+.menu a{
+  color:var(--text); text-decoration:none; margin-left:18px; font-weight:600;
+  border-bottom:2px solid transparent; padding-bottom:4px;
+}
+.menu a:hover{border-color: var(--brand)}
+
+/* Hero */
+.section{padding:42px 0}
+.section.alt{background:var(--panel-alt)}
+.hero .hero-inner{display:block}
+.hero h1{font-size:2.1rem; margin:0 0 .3rem}
+.accent{color:var(--brand)}
+.lead{color:#374151; margin-top:0}
+.cta-row{display:flex; gap:10px; margin-top:12px}
+.btn{
+  appearance:none; border:none; border-radius:12px; padding:10px 14px; font-weight:800; cursor:pointer;
+  background: var(--brand); color:white; box-shadow: var(--shadow);
+}
+.btn:hover{filter:brightness(1.02)}
+.btn.ghost{background: #f3f4f6; color:#111827; border:1px solid var(--border)}
+.btn-small{padding:8px 10px; border-radius:10px; font-size:.9rem}
+
+.goal-card{background: var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow: var(--shadow); margin-top:12px}
+.goal-top{display:flex; align-items:center; justify-content:space-between; font-weight:700}
+.goal-bot{display:flex; align-items:center; justify-content:space-between; color:var(--muted); margin-top:6px}
+.goal-label{color:var(--muted); font-weight:700}
+.progress{height:12px; background:#f3f4f6; border:1px solid var(--border); border-radius:999px; overflow:hidden; margin:8px 0}
+.progress-bar{height:100%; background: linear-gradient(90deg, var(--brand), var(--brand-2)); transition:width .3s ease}
+
+/* Cards donazioni */
+.grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:16px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow: var(--shadow)}
+.card.gift{grid-column: span 6}
+.gift-row{display:grid; grid-template-columns: auto 1fr auto; gap:12px; align-items:center}
+.gift-emoji{font-size:1.8rem}
+.gift-title{margin:0}
+.gift-desc{margin:.2rem 0 0; color:#374151}
+.gift-suggest{text-align:right}
+.suggest-label{display:block; font-size:.8rem; color:var(--muted)}
+.suggest-amount{font-weight:800}
+
+.gift-actions{margin-top:10px}
+.amount-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+.chip{border:1px solid var(--border); background:#f9fafb; color:inherit; border-radius:999px; padding:7px 10px; cursor:pointer; font-weight:700}
+.chip:hover, .chip.active{background:#f3f4f6}
+
+.btn-row{display:flex; gap:8px; align-items:center}
+.tiny{font-size:.9rem}
+
+/* Form importo libero */
+.free-form label{display:block; margin:0 0 6px; font-weight:700}
+.free-row{display:grid; grid-template-columns: 140px 1fr auto; gap:10px}
+.free-row input, .free-row select{background:white; border:1px solid var(--border); padding:10px 12px; border-radius:10px}
+.free-row input:focus, .free-row select:focus{outline:2px solid #e5e7eb}
+
+/* Modal */
+dialog{border:none; padding:0; background:transparent}
+.modal{background:white; border:1px solid var(--border); padding:0; border-radius:14px; width:min(720px, 92%)}
+.modal-header{display:flex; align-items:center; justify-content:space-between; padding:12px 12px 0}
+.modal-body{padding:8px 12px 14px}
+.icon-btn{background:transparent; border:none; font-size:1rem; cursor:pointer; color:var(--muted)}
+.pay-grid{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin:10px 0 4px}
+.pay-card{display:flex; gap:10px; align-items:center; padding:12px; background:#fafafa; border:1px solid var(--border); border-radius:10px; color:inherit; text-decoration:none}
+.pay-card:hover{background:#f3f4f6}
+.pay-emoji{font-size:1.4rem}
+.pay-title{font-weight:800}
+.pay-sub{color:var(--muted)}
+.pay-copy{flex:1}
+code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid var(--border)}
+
+/* Footer */
+.site-footer{padding:18px 0; border-top:1px solid var(--border); color:#374151; text-align:center}
+.muted{color:var(--muted)}
+
+/* Responsive */
+@media (max-width: 900px){
+  .grid{grid-template-columns: repeat(6, 1fr)}
+  .card.gift{grid-column: span 6}
+  .pay-grid{grid-template-columns: 1fr}
+  .free-row{grid-template-columns: 1fr}
+  .menu a{margin-left:12px}
+}
+
+/* ——— Social Dock ——— */
+.social-dock{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.social-btn{
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  background: rgba(20,20,20,0.65);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+}
+
+.social-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+}
+
+.social-btn img{
+  width: 22px;
+  height: 22px;
+  display: block;
+  filter: none; /* già bianche dal CDN */
+}
+
+/* Tema chiaro/scuro (opzionale) */
+@media (prefers-color-scheme: light){
+  .social-btn{ background: rgba(255,255,255,0.85); }
+}
+
+/* Evita che si stampino */
+@media print{
+  .social-dock{ display: none !important; }
+}
+
+/* Mobile: sposta un filo più in alto se hai un footer fisso */
+@media (max-width: 480px){
+  .social-dock{ bottom: 12px; right: 12px; }
+}
+
+/* Ramen photo in hero */
+.ramen-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.ramen-pic {
+  max-width: 360px; /* ridimensionata */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  flex-shrink: 0;
+}
+
+.ramen-caption {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.flag-icon {
+  width: 22px;
+  height: auto;
+  vertical-align: middle;
+  margin-left: 4px;
+  box-shadow: 0 0 2px rgba(0,0,0,0.4);
+  border-radius: 4px; /* opzionale */
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RoadToJapan2026</title>
+  <link rel="icon" href="flags/jp.svg" type="image/svg+xml">
+  <meta name="description" content="Goal: a trip to Japan (€5,000). You can contribute with themed micro-gifts or a custom amount. Thank you!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="flags/jp.svg">
+</head>
+
+<nav class="social-dock" aria-label="Social links">
+  <a id="socialIG" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Open Instagram">
+    <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="" width="22" height="22" loading="lazy" />
+  </a>
+  <a id="socialTT" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Open TikTok">
+    <img src="https://cdn.simpleicons.org/tiktok/ffffff" alt="" width="22" height="22" loading="lazy" />
+  </a>
+  <a id="socialTW" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Open Twitter/X">
+    <img src="https://cdn.simpleicons.org/x/ffffff" alt="" width="22" height="22" loading="lazy" />
+  </a>
+</nav>
+
+<body>
+  <!-- Header / Menu -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top"><img src="flags/jp.svg" alt="Japan flag" class="flag-icon"> RoadToJapan2026</a>
+      <nav class="menu">
+        <a href="#goal">Goal</a>
+        <a href="#gifts">Themed gifts</a>
+        <a href="#custom">Custom amount</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contacts">Contacts</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero / Goal -->
+    <section id="goal" class="section hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <h1>RoadToJapan2026 — Because flowers were too basic <img src="flags/jp.svg" alt="Japan flag" class="flag-icon"></h1>
+          <p class="lead">
+            I’m a broke university student living far from home — honestly, most days I’m just trying to make sure I can still afford pasta and coffee ☕🍝.<br><br>
+            Meanwhile, my girlfriend is absolutely amazing (and yes, also a student — so together we’re basically the “budget couple of the year” 🏆). Her biggest dream? ✨ A trip to Japan <img src="flags/jp.svg" alt="Japan flag" class="flag-icon">.<br><br>
+            I would <em>love</em> to give her this once-in-a-lifetime gift, but let’s be real… my wallet is currently on life support 🪫.<br><br>
+            That’s where you come in! You can chip in with a fun themed micro-gift (like “coffee”, “flowers”, “dinner”) or just set your own amount. Every little bit helps turn this dream into reality. 💗<br><br>
+            Thank you for helping me pull off the ultimate boyfriend move 🙌.
+          </p>
+          <div class="goal-card">
+            <div class="goal-top">
+              <span class="goal-label">Overall goal <img src="flags/jp.svg" alt="Japan flag" class="flag-icon"></span>
+              <span id="totalRaisedLabel">€0 raised</span>
+            </div>
+            <div class="progress"><div id="totalProgress" class="progress-bar" style="width:0%"></div></div>
+            <div class="goal-bot">
+              <span id="totalTargetLabel">Target: €5,000</span>
+              <button class="reset" id="resetData" type="button" title="Local only, for testing">Reset local data</button>
+            </div>
+          </div>
+          <div class="cta-row">
+            <a class="btn" href="#gifts">Choose a gift</a>
+            <a class="btn ghost" href="#custom">Custom amount</a>
+          </div>
+        </div>
+
+        <!-- Image of her eating ramen -->
+        <div class="hero-art ramen-block">
+          <img src="images/ramen.png" alt="Her eating ramen in Ghibli style" class="ramen-pic" />
+          <div class="ramen-caption">
+            ➡️ Getting ready for Japan by mastering ramen 🍜 — shown here in Ghibli-style, since I’d rather keep her face private (and avoid being killed 😅)
+          </div>
+        </div>
+    </section>
+
+    <!-- Themed gifts -->
+    <section id="gifts" class="section">
+      <div class="container">
+        <h2>Themed micro-gifts</h2>
+        <p class="muted">Pick a gesture: the amount is suggested, but you can adjust it.</p>
+
+        <div id="giftGrid" class="grid"></div>
+
+        <template id="giftCardTpl">
+          <article class="card gift">
+            <div class="gift-row">
+              <div class="gift-emoji" aria-hidden="true">🌸</div>
+              <div class="gift-info">
+                <h3 class="gift-title">Title</h3>
+                <p class="gift-desc">Description</p>
+              </div>
+              <div class="gift-suggest">
+                <span class="suggest-label">Suggested</span>
+                <div class="suggest-amount">€10</div>
+              </div>
+            </div>
+
+            <div class="gift-actions">
+              <div class="amount-row">
+                <button class="chip" data-amount="1">€1</button>
+                <button class="chip" data-amount="5">€5</button>
+                <button class="chip" data-amount="15">€15</button>
+                <button class="chip" data-amount="0" data-role="custom">Other</button>
+              </div>
+              <div class="btn-row">
+                <button class="btn" data-role="donateBtn">Contribute</button>
+              </div>
+              <div class="tiny muted">Raised: <span data-role="giftRaised">€0</span></div>
+            </div>
+          </article>
+        </template>
+      </div>
+    </section>
+
+    <!-- Custom amount -->
+    <section id="custom" class="section alt">
+      <div class="container">
+        <h2>Custom amount</h2>
+        <form id="freeForm" class="free-form" onsubmit="return false;">
+          <label for="freeAmount">Choose your amount</label>
+          <div class="free-row">
+            <input id="freeAmount" type="number" min="1" step="1" placeholder="e.g., 12" required />
+            <select id="freeGift">
+              <option value="">— optionally link it to a gesture —</option>
+            </select>
+            <button class="btn" id="freeDonateBtn" type="button">Contribute</button>
+          </div>
+          <p class="tiny muted">You can pay via PayPal, bank transfer (IBAN), or Satispay/Other.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <div class="container">
+        <h2>FAQ</h2>
+        <details>
+          <summary>How do I pay?</summary>
+          <p>In the popup you’ll find buttons for <strong>PayPal</strong>, the <strong>IBAN</strong> for bank transfer, and a link to <strong>Satispay/Other</strong>.</p>
+        </details>
+        <details>
+          <summary>Is the counter real?</summary>
+          <p>The counter shown here is a <em>local demo</em>. The real total depends on actual payment movements.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Contacts -->
+    <section id="contacts" class="section alt">
+      <div class="container">
+        <h2>Contacts</h2>
+        <ul class="contacts">
+          <li>📧 Email: <a id="contactEmail" href="#">name.surname@email.com</a></li>
+          <li>📱 Phone: <a id="contactPhone" href="#">+39 3XX XXX XXXX</a></li>
+          <li>🔗 PayPal.me: <a id="contactPaypal" href="#" target="_blank" rel="noopener">Open link</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- Donation modal -->
+  <dialog id="payModal">
+    <form method="dialog" class="modal">
+      <header class="modal-header">
+        <h3 id="modalTitle">Contribute</h3>
+        <button class="icon-btn" value="close" aria-label="Close">✖</button>
+      </header>
+      <div class="modal-body">
+        <p>Selected amount: <strong id="modalAmount">€0</strong></p>
+        <div class="pay-grid">
+          <a id="payPaypal" class="pay-card" target="_blank" rel="noopener">
+            <div class="pay-emoji" aria-hidden="true">💳</div>
+            <div>
+              <div class="pay-title">PayPal</div>
+              <div class="pay-sub">Open the link and enter the amount</div>
+            </div>
+          </a>
+          <div class="pay-card">
+            <div class="pay-emoji" aria-hidden="true">🏦</div>
+            <div class="pay-copy">
+              <div class="pay-title">IBAN</div>
+              <div class="pay-sub"><code id="ibanValue">IT00 A000 0000 0000 0000 0000 000</code></div>
+            </div>
+            <button class="btn btn-small" id="copyIban" type="button">Copy IBAN</button>
+          </div>
+          <a id="paySatispay" class="pay-card" target="_blank" rel="noopener">
+            <div class="pay-emoji" aria-hidden="true">📱</div>
+            <div>
+              <div class="pay-title">Satispay / Other</div>
+              <div class="pay-sub">Open the app and send the amount</div>
+            </div>
+          </a>
+        </div>
+        <p class="tiny muted">After paying, please ping me so I can update the real counter. Thank you! 💖</p>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>With love — thanks for your support!</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+Metti qui i tuoi meme/gif e referenziali in script.js (array MEMES).
