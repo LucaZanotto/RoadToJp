@@ -104,10 +104,10 @@ const modal = document.getElementById("payModal");
 function openPaymentModal(title, amount, giftId){
   const hasAmount = Number.isFinite(amount) && amount > 0;
 
-  // Titolo
+  // Title
   $("modalTitle").textContent = "Contribute — " + title;
 
-  // Riga "Selected amount": mostra solo se abbiamo un importo
+  // Selected amount row: show only if we have a fixed amount
   const selectedRow = document.getElementById("selectedRow");
   if (selectedRow){
     selectedRow.style.display = hasAmount ? "" : "none";
@@ -116,14 +116,14 @@ function openPaymentModal(title, amount, giftId){
     $("modalAmount").textContent = formatEUR(amount);
   }
 
-  // Link di pagamento
+  // Payment links
   const paypalA = $("payPaypal");
   const satisA  = $("paySatispay");
   $("ibanValue").textContent = CONFIG.iban;
   paypalA.href = CONFIG.paypalLink;
   satisA.href  = CONFIG.satispayLink;
 
-  // Click: se c'è un importo, aggiorna il contatore; altrimenti solo apri il link/copia
+  // Click: if there's an amount, update the counter; otherwise just open/copy
   paypalA.onclick = () => { if (hasAmount) addDonation(giftId, amount); };
   satisA.onclick  = () => { if (hasAmount) addDonation(giftId, amount); };
   $("copyIban").onclick = () => {
@@ -135,7 +135,7 @@ function openPaymentModal(title, amount, giftId){
   modal?.showModal?.();
 }
 
-// ====== Custom amount triggers (stesso modal, senza importo) ======
+// ====== Custom amount triggers (same modal, no fixed amount) ======
 $("openCustomCta")?.addEventListener("click", ()=>{
   openPaymentModal("Custom amount", null, null);
 });

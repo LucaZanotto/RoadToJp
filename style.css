@@ -96,7 +96,7 @@ body{
 }
 .btn:hover{filter:brightness(1.02)}
 .btn.ghost{background: #f3f4f6; color:#111827; border:1px solid var(--border)}
-.btn-small{padding:8px 10px; border-radius:10px; font-size:.9rem}
+.btn-small{padding:8px 10px; border-radius:10px; font-size:.9rem; white-space:nowrap}
 
 .goal-card{background: var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow: var(--shadow); margin-top:12px}
 .goal-top{display:flex; align-items:center; justify-content:space-between; font-weight:700}
@@ -113,7 +113,7 @@ body{
 .gift-emoji{font-size:1.8rem}
 .gift-title{margin:0}
 .gift-desc{margin:.2rem 0 0; color:#374151}
-.gift-price{text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+.gift-price{text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:8px; overflow:hidden}
 .gift-price .amount{font-weight:800; font-size:1.05rem}
 
 /* Form importo libero */
@@ -165,4 +165,43 @@ code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid va
   .ramen-caption { margin-top: 8px; max-width: 100%; }
 }
 
+/* Flag icon */
 .flag-icon { width: 22px; height: auto; vertical-align: middle; margin-left: 4px; box-shadow: 0 0 2px rgba(0,0,0,0.4); border-radius: 4px; }
+
+/* ===== Mobile optimizations ===== */
+@media (max-width: 640px){
+  /* Avoid overlap with floating dock */
+  .section:last-of-type{ padding-bottom: 80px; }
+
+  /* Single-column gifts and better spacing */
+  .grid{ grid-template-columns: 1fr; gap:12px; }
+  .card{ padding:12px; }
+  .card.gift{ grid-column: auto; }
+
+  /* Stack price row under the text and keep button inside card */
+  .gift-row{ grid-template-columns: auto 1fr; }
+  .gift-price{
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+  .gift-desc{ margin-top: .15rem; }
+  .btn{ padding:10px 12px; }
+
+  /* Modal: stack payment options */
+  .modal{ width:min(560px, 94%); }
+  .pay-grid{ grid-template-columns: 1fr; }
+  .pay-card{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+/* Slightly narrow phones */
+@media (max-width: 360px){
+  .btn{ font-weight:700; }
+  .gift-emoji{ font-size:1.6rem; }
+}
