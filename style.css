@@ -50,37 +50,55 @@ body{
 .lang:hover{background:#f6f7f9; border-color:var(--border)}
 .lang.active{background:#f3f4f6; border-color:var(--border); font-weight:700}
 
-/* Hamburger (mobile only) */
+/* Hamburger */
 .hamburger{
-  display:none;
-  width:44px; height:44px; border-radius:12px; border:1px solid var(--border);
-  background:#fff; cursor:pointer;
-  flex-direction: column;        /* <-- aggiunto */
-  align-items:center; 
-  justify-content:center;
-  gap:5px;                       /* spaziatura verticale */
+  display:none;                  /* visibile solo su mobile sotto */
+  position: relative;
+  width:44px; height:44px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  cursor:pointer;
 }
-.hamburger span{
-  display:block;
-  width:22px;
-  height:2px;
+.hamburger .line,
+.hamburger .line::before,
+.hamburger .line::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  width:22px; height:2px;
   background:#111;
   border-radius:2px;
-  transition: transform .3s ease, opacity .3s ease;
+  transform: translateX(-50%);
+  transition: transform .25s ease, opacity .2s ease, background .2s ease, top .25s ease;
 }
 
-.hamburger[aria-expanded="true"] span:nth-child(2){opacity:.1}
-.hamburger[aria-expanded="true"] span:nth-child(1){transform: translateY(6px) rotate(45deg)}
-.hamburger[aria-expanded="true"] span:nth-child(3){transform: translateY(-6px) rotate(-45deg)}
+/* 3 linee allineate perfettamente */
+.hamburger .line{ top:50%; transform: translate(-50%, -50%); }
+.hamburger .line::before{ top:-7px; }
+.hamburger .line::after { top: 7px; }
 
-/* Mobile layout for the menu */
+/* Stato aperto: X centrata, senza storture */
+.hamburger[aria-expanded="true"] .line{
+  background: transparent;       /* sparisce la barra centrale */
+}
+.hamburger[aria-expanded="true"] .line::before{
+  top:0;
+  transform: translateX(-50%) rotate(45deg);
+}
+.hamburger[aria-expanded="true"] .line::after{
+  top:0;
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+/* Mobile menu layout */
 @media (max-width: 900px){
-  .hamburger{display:inline-flex}
+  .hamburger{ display:block; }
+
+  .header-inner{ gap:10px; }
   .menu{
     position: fixed;
-    top: 60px; /* circa altezza header */
-    right: 12px;
-    left: 12px;
+    top: 60px; right:12px; left:12px;
     display:none;
     flex-direction: column;
     gap:12px;
@@ -91,13 +109,7 @@ body{
     padding:12px;
     z-index: 60;
   }
-  .menu.open{display:flex}
-  .menu .lang-switch{
-    width:100%;
-    justify-content: space-between;
-    border-top:1px solid var(--border);
-    padding-top:10px; margin-top:4px;
-  }
+  .menu.open{ display:flex; }
 }
 
 /* Hero */
