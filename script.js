@@ -44,6 +44,29 @@ if (ig) ig.href = CONFIG.social.instagram;
 if (tk) tk.href = CONFIG.social.tiktok;
 if (tw) tw.href = CONFIG.social.twitter;
 
+// ====== Mobile menu (hamburger) ======
+const hamburger = $("hamburger");
+const primaryMenu = $("primaryMenu");
+
+function closeMenu(){
+  hamburger.setAttribute("aria-expanded","false");
+  primaryMenu.classList.remove("open");
+}
+function toggleMenu(){
+  const isOpen = hamburger.getAttribute("aria-expanded")==="true";
+  hamburger.setAttribute("aria-expanded", String(!isOpen));
+  primaryMenu.classList.toggle("open");
+}
+hamburger?.addEventListener("click", toggleMenu);
+// Chiudi il menu quando clicchi un link o fuori
+primaryMenu?.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+document.addEventListener("click",(e)=>{
+  if (!primaryMenu.contains(e.target) && !hamburger.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+// ====== Rendering ======
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function addDonation(giftId, amount){
   amount = Math.round(Math.max(0, Number(amount) || 0));
@@ -54,7 +77,6 @@ function addDonation(giftId, amount){
 }
 function resetState(){ localStorage.removeItem(STORAGE_KEY); location.reload(); }
 
-// Rendering
 function render(){
   // Total
   const totalRaised = state.totalRaised || 0;

@@ -9,21 +9,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <!-- CSS di default (EN). Per lingue future potrai usare file dedicati (es. main-es.css) -->
+  <link rel="stylesheet" href="style.css" id="themeCss" />
   <link rel="icon" href="flags/jp.svg">
 </head>
 
+<!-- Social floating dock -->
 <nav class="social-dock" aria-label="Social links">
   <a id="socialIG" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Open Instagram">
-    <!-- Colore brand per visibilità su tema chiaro -->
     <img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram" width="22" height="22" loading="lazy" />
   </a>
   <a id="socialTT" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Open TikTok">
-    <!-- Nero per contrasto sicuro -->
     <img src="https://cdn.simpleicons.org/tiktok/000000" alt="TikTok" width="22" height="22" loading="lazy" />
   </a>
   <a id="socialTW" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Open Twitter/X">
-    <!-- Nero per contrasto sicuro -->
     <img src="https://cdn.simpleicons.org/x/000000" alt="X" width="22" height="22" loading="lazy" />
   </a>
 </nav>
@@ -33,12 +32,35 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="#top"><img src="flags/jp.svg" alt="Japan flag" class="flag-icon"> RoadToJapan2026</a>
-      <nav class="menu">
+
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-controls="primaryMenu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- Primary menu -->
+      <nav class="menu" id="primaryMenu" aria-label="Primary">
         <a href="#goal">Goal</a>
         <a href="#gifts">Themed gifts</a>
         <a href="#custom">Custom amount</a>
         <a href="#faq">FAQ</a>
         <a href="#contacts">Contacts</a>
+
+        <!-- Language switcher -->
+        <div class="lang-switch" aria-label="Language selector">
+          <a href="index-it.html" class="lang" aria-label="Italiano">
+            <img src="flags/it.svg" alt="IT" width="20" height="14"> IT
+          </a>
+          <a href="index.html" class="lang active" aria-label="English (default)">
+            <img src="flags/gb.svg" alt="EN" width="20" height="14"> EN
+          </a>
+          <a href="index-es.html" class="lang" aria-label="Español">
+            <img src="flags/es.svg" alt="ES" width="20" height="14"> ES
+          </a>
+          <a href="index-de.html" class="lang" aria-label="Deutsch">
+            <img src="flags/de.svg" alt="DE" width="20" height="14"> DE
+          </a>
+        </div>
       </nav>
     </div>
   </header>
